@@ -31,3 +31,19 @@
 # Debug files
 *.dSYM/
 *.su
+
+# Project files
+.cproject
+.project
+.settings/*
+
+# Build artifacts
+build/*
+vendor/local/*
+src/rust/.cargo/config
+src/version.h
+
+# Sub projects
+vendor/pcre2/*
+
+
