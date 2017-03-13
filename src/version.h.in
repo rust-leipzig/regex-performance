@@ -1,0 +1,32 @@
+//! @file   version.h
+//! @brief  definition of the semantic version
+
+#ifndef VERSION_H
+#define VERSION_H
+
+/**
+ * major version
+ */
+#define MAJOR_VERSION   @MAJOR_VERSION@
+
+/**
+ * minor version
+ */
+#define MINOR_VERSION   @MINOR_VERSION@
+
+/**
+ * patch level
+ */
+#define PATCH_VERSION   @PATCH_VERSION@
+
+/**
+ * ctk version string
+ */
+#define VERSION_STRING  "@MAJOR_VERSION@.@MINOR_VERSION@.@PATCH_VERSION@ @BUILD_DATE@"
+
+/**
+ * numerical representation of the ctk version
+ */
+#define VERSION_32BIT   ((MAJOR_VERSION << 24) | (MINOR_VERSION << 16) | (PATCH_VERSION << 8) | 0)
+
+#endif // VERSION_H

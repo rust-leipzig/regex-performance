@@ -1,0 +1,2 @@
+[build]
+target-dir = "@PROJECT_BINARY_DIR@/rregex"
