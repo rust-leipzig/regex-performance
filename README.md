@@ -1,17 +1,17 @@
 # Regex Performance
 ## Introduction
 Regular expressions are commonly used in pattern search algorithms.
-This tool is based on the work of John Maddock (See his own regex comparison [here|http://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html)
-and the sljit project (See their regex comparision [here|http://sljit.sourceforge.net/regex_perf.html]).
+This tool is based on the work of John Maddock (See his own regex comparison [here](http://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html))
+and the sljit project (See their regex comparision [here](http://sljit.sourceforge.net/regex_perf.html)).
 
 ## Supported engines
 The following regex engines are supported and covered by the tool:
-- [Hyperscan|https://github.com/01org/hyperscan]
-- [Oniguruma|https://github.com/kkos/oniguruma]
-- [RE2|https://github.com/google/re2]
-- [Tre|https://github.com/laurikari/tre]
-- [PCRE2|http://www.pcre.oashrg]
-- [Rust regex crate|https://doc.rust-lang.org/regex/regex/index.html]
+- [Hyperscan](https://github.com/01org/hyperscan)
+- [Oniguruma](https://github.com/kkos/oniguruma)
+- [RE2](https://github.com/google/re2)
+- [Tre](https://github.com/laurikari/tre)
+- [PCRE2](http://www.pcre.oashrg)
+- [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 
 ## Building the tool
 The different engines have different requirements which are not described here.
