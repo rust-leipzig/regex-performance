@@ -1,5 +1,9 @@
 require: sudo
 
+language: rust
+rust:
+  - stable
+
 addons:
   apt:
     sources:
@@ -18,7 +22,6 @@ addons:
     - libtool
 
 before_install:
-  - curl https://sh.rustup.rs -sSf | sh
   - cmake ..
 
 install:
