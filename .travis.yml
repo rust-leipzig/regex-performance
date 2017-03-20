@@ -21,10 +21,10 @@ addons:
     - libtool
 
 before_install:
-  - sudo add-apt-repository ppa:kzemek/boost
-  - sudo add-apt-repository ppa:george-edison55/cmake-3.x
-  - sudo apt-get update
-  - sudo apt-get install libboost1.58-dev cmake
+  - sudo add-apt-repository ppa:kzemek/boost -y
+  - sudo add-apt-repository ppa:george-edison55/cmake-3.x -y
+  - sudo apt-get update -q
+  - sudo apt-get install libboost1.58-dev cmake -y
   - sudo alternatives --set gcc /usr/bin/gcc-6
   - sudo alternatives --set g++ /usr/bin/g++-6
   - mkdir build && cd build && cmake ..
