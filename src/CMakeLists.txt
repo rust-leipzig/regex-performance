@@ -18,10 +18,13 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/rust/include
 )
 
-link_directories(
-    ${PROJECT_SOURCE_DIR}/vendor/local/lib
-    ${PROJECT_BINARY_DIR}/rregex/release
-)
+link_directories(${PROJECT_SOURCE_DIR}/vendor/local/lib)
+
+if(CMAKE_BUILD_TYPE MATCHES "^Release")
+    link_directories(${PROJECT_BINARY_DIR}/rregex/release)
+else()
+    link_directories(${PROJECT_BINARY_DIR}/rregex/debug)
+endif()
 
 add_executable(regex_perf ${REGEX_SOURCES})
 

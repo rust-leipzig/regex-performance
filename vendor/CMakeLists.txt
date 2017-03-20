@@ -50,7 +50,7 @@ ExternalProject_Add(libtre
 
 # pcre2
 ExternalProject_Add(libpcre2
-                    SVN_REPOSITORY svn://vcs.exim.org/pcre2/code/trunk
+                    URL https://ftp.pcre.org/pub/pcre/pcre2-10.23.tar.gz
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
                     SOURCE_DIR pcre2
                     TMP_DIR ${PROJECT_BINARY_DIR}/pcre2-tmp
