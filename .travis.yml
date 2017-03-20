@@ -22,7 +22,7 @@ addons:
     - libtool
 
 before_install:
-  - cmake ..
+  - mkdir build && cd build && cmake ..
 
 install:
   - make 
