@@ -9,11 +9,8 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - george-edison55-cmake-3.x
+    - boost-latest
     packages:
-    - gcc-6
-    - g++-6
-    - cmake
     - ragel
     - python3
     - libboost-all-dev
