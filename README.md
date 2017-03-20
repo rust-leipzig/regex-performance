@@ -2,7 +2,9 @@
 ## Introduction
 Regular expressions are commonly used in pattern search algorithms.
 This tool is based on the work of John Maddock (See his own regex comparison [here](http://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html))
-and the sljit project (See their regex comparision [here](http://sljit.sourceforge.net/regex_perf.html)).
+and the sljit project (See their regex comparison [here](http://sljit.sourceforge.net/regex_perf.html)).
+
+## Requirements
 
 ## Supported engines
 The following regex engines are supported and covered by the tool:
@@ -10,7 +12,7 @@ The following regex engines are supported and covered by the tool:
 - [Oniguruma](https://github.com/kkos/oniguruma)
 - [RE2](https://github.com/google/re2)
 - [Tre](https://github.com/laurikari/tre)
-- [PCRE2](http://www.pcre.oashrg)
+- [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 
 ## Building the tool
@@ -38,7 +40,7 @@ The test tool calls each engine with a defined set of different regular expressi
 The repository contains a ~16Mbyte large text file (3200.txt) which can be used for measuring.
 
 ```bash
-./regex_perf -f ./3200.txt
+./src/regex_perf -f ./3200.txt
 ```
 
 By default, the tool repeats each test 5 times and prints the best time of each test.

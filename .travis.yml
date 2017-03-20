@@ -1,0 +1,25 @@
+require: sudo
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+    - cmake
+    - ragel
+    - python3
+    - libboost-all-dev
+    - libpcap0.8-dev
+    - autoconf
+    - automake
+    - gettext
+    - libtool
+
+before_install:
+  - curl https://sh.rustup.rs -sSf | sh
+  - cmake ..
+
+install:
+  - make 
