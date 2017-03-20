@@ -9,11 +9,11 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - boost-latest
     packages:
+    - gcc-6
+    - g++-6
     - ragel
     - python3
-    - libboost-all-dev
     - libpcap0.8-dev
     - autoconf
     - automake
@@ -21,6 +21,12 @@ addons:
     - libtool
 
 before_install:
+  - sudo add-apt-repository ppa:kzemek/boost
+  - sudo add-apt-repository ppa:george-edison55/cmake-3.x
+  - sudo apt-get update
+  - sudo apt-get install libboost1.58-dev cmake
+  - sudo alternatives --set gcc /usr/bin/gcc-6
+  - sudo alternatives --set g++ /usr/bin/g++-6
   - mkdir build && cd build && cmake ..
 
 install:
