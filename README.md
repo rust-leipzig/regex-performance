@@ -5,6 +5,21 @@ This tool is based on the work of John Maddock (See his own regex comparison [he
 and the sljit project (See their regex comparison [here](http://sljit.sourceforge.net/regex_perf.html)).
 
 ## Requirements
+| dependency | version  |
+|------------|----------|
+| Cmake      | >=3.0    |
+| Ragel      | 6.9      |
+| Python     | >=3.0    |
+| Boost      | >=1.57   |
+| Pcap       | >=0.8    |
+| Autoconf   | 2.69 (*) |
+| Automake   | 1.15 (*) |
+| Autopoint  | 0.19.7 (*)|
+| Gettext    | 0.19.7 (*)|
+| Libtool    | 2.4.6 (*)|
+| Git        | 2.11.0 (*)|
+
+(*) Tested with named version only. Older versions may work too.
 
 ## Supported engines
 The following regex engines are supported and covered by the tool:
@@ -48,3 +63,9 @@ The overall time to process each regular expression is measured and accounted.
 The scoring algorithhm distributes the fastest engine 5 points, the second fastest 4 points and so on.
 The score points help to limit the impact of a slow regular expression eninge test in comparision to
 the absolut time value.
+
+You can specify a file to write the test results per expression and engine:
+```bash
+./src/regex_perf -f ./3200.txt -o ./results.csv
+```
+The test tool writes the results in a csv-compatible format.
