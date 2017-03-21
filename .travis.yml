@@ -17,6 +17,7 @@ addons:
     - libpcap0.8-dev
     - autoconf
     - automake
+    - autopoint
     - gettext
     - libtool
 
