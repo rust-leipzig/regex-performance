@@ -1,4 +1,6 @@
 # Regex Performance
+[![Build Status](https://travis-ci.org/rust-leipzig/regex-performance.svg?branch=master)](https://travis-ci.org/rust-leipzig/regex-performance)
+
 ## Introduction
 Regular expressions are commonly used in pattern search algorithms.
 This tool is based on the work of John Maddock (See his own regex comparison [here](http://www.boost.org/doc/libs/1_41_0/libs/regex/doc/gcc-performance.html))
