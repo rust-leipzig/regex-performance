@@ -27,7 +27,6 @@ before_install:
   - sudo apt-get install libboost1.58-dev cmake -y
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 1 --slave /usr/bin/g++ g++ /usr/bin/g++-6
   - sudo update-alternatives --set gcc /usr/bin/gcc-6
-  - sudo update-alternatives --set g++ /usr/bin/g++-6
   - mkdir build && cd build && cmake ..
 
 install:
