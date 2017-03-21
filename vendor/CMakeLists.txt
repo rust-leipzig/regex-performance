@@ -4,7 +4,7 @@ include(ExternalProject)
 ExternalProject_Add(libhs
                     GIT_REPOSITORY https://github.com/01org/hyperscan.git
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-                    SOURCE_DIR hyperscan
+                    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/hyperscan
                     TMP_DIR ${PROJECT_BINARY_DIR}/hyperscan-tmp
                     STAMP_DIR ${PROJECT_BINARY_DIR}/hyperscan-stamp
                     BINARY_DIR ${PROJECT_BINARY_DIR}/hyperscan-build
@@ -16,7 +16,7 @@ ExternalProject_Add(libhs
 ExternalProject_Add(libonig
                     GIT_REPOSITORY https://github.com/kkos/oniguruma
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-                    SOURCE_DIR oniguruma
+                    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/oniguruma
                     TMP_DIR ${PROJECT_BINARY_DIR}/oniguruma-tmp
                     STAMP_DIR ${PROJECT_BINARY_DIR}/oniguruma-stamp
                     BINARY_DIR ${PROJECT_BINARY_DIR}/oniguruma-build
@@ -28,7 +28,7 @@ ExternalProject_Add(libonig
 ExternalProject_Add(libre2
                     GIT_REPOSITORY https://github.com/google/re2.git
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-                    SOURCE_DIR re2
+                    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/re2
                     TMP_DIR ${PROJECT_BINARY_DIR}/re2-tmp
                     STAMP_DIR ${PROJECT_BINARY_DIR}/re2-stamp
                     BINARY_DIR ${PROJECT_BINARY_DIR}/re2-build
@@ -40,7 +40,7 @@ ExternalProject_Add(libre2
 ExternalProject_Add(libtre
                     GIT_REPOSITORY https://github.com/laurikari/tre.git
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-                    SOURCE_DIR tre
+                    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tre
                     TMP_DIR ${PROJECT_BINARY_DIR}/tre-tmp
                     STAMP_DIR ${PROJECT_BINARY_DIR}/tre-stamp
                     BINARY_DIR ${PROJECT_BINARY_DIR}/tre-build
@@ -52,7 +52,7 @@ ExternalProject_Add(libtre
 ExternalProject_Add(libpcre2
                     URL https://ftp.pcre.org/pub/pcre/pcre2-10.23.tar.gz
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-                    SOURCE_DIR pcre2
+                    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pcre2
                     TMP_DIR ${PROJECT_BINARY_DIR}/pcre2-tmp
                     STAMP_DIR ${PROJECT_BINARY_DIR}/pcre2-stamp
                     BINARY_DIR ${PROJECT_BINARY_DIR}/pcre2-build
