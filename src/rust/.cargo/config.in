@@ -1,2 +1,4 @@
 [build]
 target-dir = "@PROJECT_BINARY_DIR@/rregex"
+rustflags = ["-C","target-cpu=native"]
+
