@@ -10,3 +10,7 @@ crate-type = ["staticlib"]
 [dependencies]
 regex = { version = "0.2.1"}
 libc = "0.2.19"
+
+[features]
+simd-accel = ["regex/simd-accel"]
+
