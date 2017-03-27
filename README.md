@@ -32,6 +32,10 @@ The following regex engines are supported and covered by the tool:
 - [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 
+The configuration script distinguishes between nightly and other Rust toolchains to enable the SIMD-feature
+which is currently available in the nightly built only. The SIMD-feature improves the throughput of the
+regex crate for defined expressions.
+
 ## Building the tool
 The different engines have different requirements which are not described here.
 Please see the related project documentations.
