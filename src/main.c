@@ -9,24 +9,29 @@
 static char* data = NULL;
 static int data_len = 0;
 
-struct result {
-    int score;
-    int time;
-};
-
 struct engines {
     char * name;
-    int (*find_all)(char* pattern, char* subject, int subject_len, int repeat);
+    int (*find_all)(char* pattern, char* subject, int subject_len, int repeat, struct result * result);
 };
 
 static struct engines engines [] = {
+#ifdef INCLUDE_PCRE2
     {.name = "pcre",        .find_all = pcre2_std_find_all},
     {.name = "pcre-dfa",    .find_all = pcre2_dfa_find_all},
     {.name = "pcre-jit",    .find_all = pcre2_jit_find_all},
+#endif
+#ifdef INCLUDE_RE2
     {.name = "re2",         .find_all = re2_find_all},
+#endif
+#ifdef INCLUDE_ONIGURUMA
     {.name = "onig",        .find_all = onig_find_all},
+#endif
+#ifdef INCLUDE_TRE
     {.name = "tre",         .find_all = tre_find_all},
+#endif
+#ifdef INCLUDE_HYPERSCAN
     {.name = "hscan",       .find_all = hs_find_all},
+#endif
     {.name = "rust_regex",  .find_all = rust_find_all},
 };
 
@@ -94,17 +99,20 @@ void find_all(char* pattern, char* subject, int subject_len, int repeat, struct 
     fprintf(stdout, "-----------------\nRegex: '%s'\n", pattern);
 
     for (iter = 0; iter < sizeof(engines)/sizeof(engines[0]); iter++) {
-        int ret = engines[iter].find_all(pattern, subject, subject_len, repeat);
-        if (ret != -1) {
-            engine_results[iter].time = ret;
-        } else {
+        int ret = engines[iter].find_all(pattern, subject, subject_len, repeat, &(engine_results[iter]));
+        if (ret == -1) {
             engine_results[iter].time = 0;
+            engine_results[iter].time_sd = 0;
+            engine_results[iter].matches = 0;
+            engine_results[iter].score = 0;
+        } else {
+            printResult(engines[iter].name, &(engine_results[iter]));
         }
     }
 
     int score_points = 5;
     for (int top = 0; top < score_points; top++) {
-        int best = 0;
+        double best = 0;
 
         for (iter = 0; iter < sizeof(engines)/sizeof(engines[0]); iter++) {
             if (engine_results[iter].time > 0 &&
@@ -125,9 +133,42 @@ void find_all(char* pattern, char* subject, int subject_len, int repeat, struct 
 
 }
 
-void printResult(char * name, int time, int found)
+void get_mean_and_derivation(double * times, uint32_t times_len, struct result * res)
 {
-    fprintf(stdout, "[%10s] time: %5d ms (%d matches)\n", name, (int)time, found);
+    double mean, sd, var, sum = 0.0, sdev = 0.0;
+    int32_t iter;
+
+    if (times == NULL || res == NULL || times_len == 0) {
+        return;
+    }
+
+    if (times_len == 1) {
+        res->time = times[0];
+        res->time_sd = 0;
+    }
+
+    /* get mean value */
+    for (iter = 0; iter < times_len; iter++) {
+        sum += times[iter];
+    }
+    mean = sum / times_len;
+
+    /* get variance */
+    for (iter = 0; iter < times_len; iter++) {
+        sdev += (times[iter] - mean) * (times[iter] - mean);
+    }
+    var = sdev / (times_len - 1);
+
+    /* get standard derivation */
+    sd = sqrt(var);
+
+    res->time = mean;
+    res->time_sd = sd;
+}
+
+void printResult(char * name, struct result * res)
+{
+    fprintf(stdout, "[%10s] time: %7.1f ms (+/- %4.1f %%), matches: %8d\n", name, res->time, (res->time_sd / res->time) * 100, res->matches);
     fflush(stdout);
 }
 
@@ -188,7 +229,7 @@ int main(int argc, char **argv)
 
     fprintf(stdout, "-----------------\nTotal Results:\n");
     for (int iter = 0; iter < sizeof(engines)/sizeof(engines[0]); iter++) {
-        fprintf(stdout, "[%10s] time:  %6u ms, score: %6u points,\n", engines[iter].name, engine_results[iter].time, engine_results[iter].score);
+        fprintf(stdout, "[%10s] time:  %7.1f ms, score: %6u points,\n", engines[iter].name, engine_results[iter].time, engine_results[iter].score);
     }
 
     if (out_file != NULL) {
@@ -209,6 +250,9 @@ int main(int argc, char **argv)
         for (iter = 0; iter < sizeof(engines)/sizeof(engines[0]); iter++) {
             fprintf(f, "%s [sp];", engines[iter].name);
         }
+        for (iter = 0; iter < sizeof(engines)/sizeof(engines[0]); iter++) {
+            fprintf(f, "%s [matches];", engines[iter].name);
+        }
         fprintf(f, "\n");
 
         /* write data */
@@ -216,10 +260,13 @@ int main(int argc, char **argv)
             fprintf(f, "%s;", regex[iter]);
 
             for (iiter = 0; iiter < sizeof(engines)/sizeof(engines[0]); iiter++) {
-                fprintf(f, "%d;", results[iter][iiter].time);
+                fprintf(f, "%7.1f;", results[iter][iiter].time);
             }
             for (iiter = 0; iiter < sizeof(engines)/sizeof(engines[0]); iiter++) {
                 fprintf(f, "%d;", results[iter][iiter].score);
+            }
+            for (iiter = 0; iiter < sizeof(engines)/sizeof(engines[0]); iiter++) {
+                fprintf(f, "%d;", results[iter][iiter].matches);
             }
             fprintf(f, "\n");
         }

@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.0)
 project(RegexPeformance C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(GENERAL_C_FLAGS "-Wall -Wstack-usage=2000 -Werror -fdiagnostics-color -pipe -fsigned-char -fno-asynchronous-unwind-tables -fno-stack-protector -Wunused-parameter")
+set(GENERAL_C_FLAGS "-Wall -Wstack-usage=5000 -Werror -fdiagnostics-color -pipe -fsigned-char -fno-asynchronous-unwind-tables -fno-stack-protector -Wunused-parameter")
 
 set(CMAKE_C_FLAGS "-std=c11 ${GENERAL_C_FLAGS}" CACHE STRING "additional CFLAGS" FORCE)
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g")

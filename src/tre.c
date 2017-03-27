@@ -4,23 +4,24 @@
 
 #include <tre/tre.h>
 
-int tre_find_all(char* pattern, char* subject, int subject_len, int repeat)
+int tre_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
 	int err_val;
 	regex_t regex;
 	regmatch_t match[1];
 	char *ptr;
 	int len;
-	TIME_TYPE start, end, resolution;
-	int found, time, best_time = 0;
-
-	GET_TIME_RESOLUTION(resolution);
+	TIME_TYPE start, end;
+	int found = 0;
 
 	err_val = tre_regcomp(&regex, pattern, REG_EXTENDED | REG_NEWLINE);
 	if (err_val != 0) {
 		printf("TRE compilation failed with error %d\n", err_val);
 		return -1;
 	}
+
+    double * times = calloc(repeat, sizeof(double));
+    int const times_len = repeat;
 
 	do {
 		found = 0;
@@ -38,13 +39,15 @@ int tre_find_all(char* pattern, char* subject, int subject_len, int repeat)
 			len -= match[0].rm_eo;
 		}
 		GET_TIME(end);
-		time = TIME_DIFF_IN_MS(start, end, resolution);
-		if (!best_time || time < best_time)
-			best_time = time;
+
+        times[repeat - 1] = TIME_DIFF_IN_MS(start, end);
 	} while (--repeat > 0);
-	printResult("tre", best_time, found);
+
+    res->matches = found;
+    get_mean_and_derivation(times, times_len, res);
 
 	tre_regfree(&regex);
+    free(times);
 
-    return best_time;
+    return 0;
 }

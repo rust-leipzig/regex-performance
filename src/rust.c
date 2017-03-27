@@ -4,10 +4,9 @@
 
 #include <rregex.h>
 
-int rust_find_all(char * pattern, char * subject, int subject_len, int repeat)
+int rust_find_all(char * pattern, char * subject, int subject_len, int repeat, struct result * res)
 {
-    TIME_TYPE start, end, resolution;
-    int time, best_time = 0;
+    TIME_TYPE start, end;
     int found = 0;
 
     struct Regex const * regex_hdl = regex_new(pattern);
@@ -16,22 +15,23 @@ int rust_find_all(char * pattern, char * subject, int subject_len, int repeat)
         return -1;
     }
 
-    GET_TIME_RESOLUTION(resolution);
+    double * times = calloc(repeat, sizeof(double));
+    int const times_len = repeat;
 
     do {
         GET_TIME(start);
         found = regex_matches(regex_hdl, (uint8_t*) subject, subject_len);
         GET_TIME(end);
 
-        time = TIME_DIFF_IN_MS(start, end, resolution);
-        if (!best_time || time < best_time) {
-            best_time = time;
-        }
+        times[repeat - 1] = TIME_DIFF_IN_MS(start, end);
+
     } while (--repeat > 0);
 
-    printResult("rust_regex", best_time, found);
+    res->matches = found;
+    get_mean_and_derivation(times, times_len, res);
 
     regex_free(regex_hdl);
+    free(times);
 
-    return best_time;
+    return 0;
 }
