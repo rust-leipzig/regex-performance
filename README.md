@@ -37,6 +37,10 @@ the corresponding cmake variable `INCLUDE_<name>` has to be set to `system`. The
 tries to locate the library and uses the library for linking the benchmark.
 The same variable can be set to `disabled` to exclude an engine.
 
+The configuration script distinguishes between nightly and other Rust toolchains to enable the SIMD-feature
+which is currently available in the nightly built only. The SIMD-feature improves the throughput of the
+regex crate for defined expressions.
+
 ## Building the tool
 The different engines have different requirements which are not described here.
 Please see the related project documentations.
