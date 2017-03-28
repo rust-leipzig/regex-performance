@@ -7,7 +7,7 @@
 
 static int work_space[4096];
 
-int pcre2_find_all(char* pattern, char* subject, int subject_len, int repeat, int mode)
+int pcre2_find_all(char* pattern, char* subject, int subject_len, int repeat, int mode, struct result * res)
 {
     pcre2_code *re;
     pcre2_compile_context *comp_ctx;
@@ -19,10 +19,8 @@ int pcre2_find_all(char* pattern, char* subject, int subject_len, int repeat, in
     PCRE2_SIZE *ovector;
     char *ptr;
     int len;
-    TIME_TYPE start = 0, end = 0, resolution = 0;
-    int found, time, best_time = 0;
-
-    GET_TIME_RESOLUTION(resolution);
+    TIME_TYPE start = 0, end = 0;
+    int found = 0;
 
     comp_ctx = pcre2_compile_context_create(NULL);
     if (!comp_ctx) {
@@ -77,6 +75,9 @@ int pcre2_find_all(char* pattern, char* subject, int subject_len, int repeat, in
     }
 
     ovector = pcre2_get_ovector_pointer(match_data);
+
+    double * times = calloc(repeat, sizeof(double));
+    int const times_len = repeat;
 
     do {
         found = 0;
@@ -166,31 +167,33 @@ int pcre2_find_all(char* pattern, char* subject, int subject_len, int repeat, in
             GET_TIME(end);
             break;
         }
-        time = TIME_DIFF_IN_MS(start, end, resolution);
-        if (!best_time || time < best_time)
-            best_time = time;
+
+        times[repeat - 1] = TIME_DIFF_IN_MS(start, end);
     } while (--repeat > 0);
-    printResult(mode == 0 ? "pcre" : (mode == 1 ? "pcre-dfa" : "pcre-jit"), best_time, found);
+
+    res->matches = found;
+    get_mean_and_derivation(times, times_len, res);
 
     if (stack)
         pcre2_jit_stack_free(stack);
     pcre2_match_context_free(match_ctx);
     pcre2_code_free(re);
+    free(times);
 
-    return best_time;
+    return 0;
 }
 
-int pcre2_std_find_all(char* pattern, char* subject, int subject_len, int repeat)
+int pcre2_std_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
-    return pcre2_find_all(pattern, subject, subject_len, repeat, 0);
+    return pcre2_find_all(pattern, subject, subject_len, repeat, 0, res);
 }
 
-int pcre2_dfa_find_all(char* pattern, char* subject, int subject_len, int repeat)
+int pcre2_dfa_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
-    return pcre2_find_all(pattern, subject, subject_len, repeat, 1);
+    return pcre2_find_all(pattern, subject, subject_len, repeat, 1, res);
 }
 
-int pcre2_jit_find_all(char* pattern, char* subject, int subject_len, int repeat)
+int pcre2_jit_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
-    return pcre2_find_all(pattern, subject, subject_len, repeat, 2);
+    return pcre2_find_all(pattern, subject, subject_len, repeat, 2, res);
 }

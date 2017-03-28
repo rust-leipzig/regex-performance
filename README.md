@@ -32,6 +32,11 @@ The following regex engines are supported and covered by the tool:
 - [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 
+The engines are built from their sources. In the case an installed engine should be used,
+the corresponding cmake variable `INCLUDE_<name>` has to be set to `system`. The configuration script
+tries to locate the library and uses the library for linking the benchmark.
+The same variable can be set to `disabled` to exclude an engine.
+
 The configuration script distinguishes between nightly and other Rust toolchains to enable the SIMD-feature
 which is currently available in the nightly built only. The SIMD-feature improves the throughput of the
 regex crate for defined expressions.

@@ -37,30 +37,34 @@ static int search_all_re2(void* obj, char* subject, int subject_len)
     return found;
 }
 
-extern "C" int re2_find_all(char* pattern, char* subject, int subject_len, int repeat)
+extern "C" int re2_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
     void * obj = get_re2_object(pattern);
-    TIME_TYPE start, end, resolution;
-    int found, time, best_time = 0;
-
-    GET_TIME_RESOLUTION(resolution);
+    TIME_TYPE start, end = 0;
+    int found = 0;
 
     if (!obj) {
         printf("RE2 compilation failed\n");
         return -1;
     }
 
+    double * times = (double*) std::calloc(repeat, sizeof(double));
+    int const times_len = repeat;
+
     do {
         GET_TIME(start);
         found = search_all_re2(obj, subject, subject_len);
         GET_TIME(end);
-        time = TIME_DIFF_IN_MS(start, end, resolution);
-        if (!best_time || time < best_time)
-            best_time = time;
+        times[repeat - 1] = TIME_DIFF_IN_MS(start, end);
+
     } while (--repeat > 0);
-    printResult((char *) "re2", best_time, found);
+
+
+    res->matches = found;
+    get_mean_and_derivation(times, times_len, res);
 
     free_re2_object(obj);
+    free(times);
 
-    return best_time;
+    return 0;
 }
