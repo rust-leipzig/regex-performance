@@ -15,14 +15,6 @@ if(CMAKE_BUILD_TYPE MATCHES "^Release")
     list(APPEND CARGO_BUILD_OPT "--release")
 endif()
 
-if(${RUST_C_VERSION} MATCHES "nightly")
-    message("-- Found nightly. Use feature 'simd-accel': ON")
-
-    list(APPEND CARGO_BUILD_OPT "--features" "simd-accel")
-else()
-    message("-- Found stable. Use feature 'simd-accel': OFF")
-endif()
-
 add_custom_target(librregex ALL
     # create rust regex library
     COMMAND cargo build -v ${CARGO_BUILD_OPT}
