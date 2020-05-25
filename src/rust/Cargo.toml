@@ -9,6 +9,7 @@ crate-type = ["staticlib"]
 
 [dependencies]
 regex = "1.3.7"
+regress = "0.1"
 libc = "0.2.19"
 
 [features]

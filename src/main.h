@@ -40,6 +40,7 @@ int onig_find_all(char* pattern, char* subject, int subject_len, int repeat, str
 int hs_find_all(char * pattern, char * subject, int subject_len, int repeat, struct result * res);
 #endif
 int rust_find_all(char * pattern, char * subject, int subject_len, int repeat, struct result * res);
+int regress_find_all(char * pattern, char * subject, int subject_len, int repeat, struct result * res);
 
 #ifdef __cplusplus
 }
