@@ -9,7 +9,7 @@ extern "C" {
 
 #define TIME_TYPE                   clock_t
 #define GET_TIME(res)               { res = clock(); }
-#define TIME_DIFF_IN_MS(begin, end) (((double) (end - start)) * 1000 / CLOCKS_PER_SEC)
+#define TIME_DIFF_IN_MS(begin, end) (((double) (end - begin)) * 1000 / CLOCKS_PER_SEC)
 #define UNUSED __attribute__((unused))
 
 struct result {
