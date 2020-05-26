@@ -31,6 +31,7 @@ The following regex engines are supported and covered by the tool:
 - [Tre](https://github.com/laurikari/tre)
 - [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
+- [Regress regex crate](https://docs.rs/regress/)
 
 The engines are built from their sources. In the case an installed engine should be used,
 the corresponding cmake variable `INCLUDE_<name>` has to be set to `system`. The configuration script
