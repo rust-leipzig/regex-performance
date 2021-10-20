@@ -6,7 +6,7 @@ include(ExternalProject)
 # @param[in]    URL         Used URL to download the sources. Git repositories have to contain `.git` for identification.
 # @param[in]    ARGN        All preceeding arguments are forwareded to `CMAKE_ARGS`, if external project uses cmake
 #                           for configuration, or `CONFIGURE_COMMAND`.
-function(AddExternalProject NAME LIB_NAME URL)
+function(AddExternalProject NAME LIB_NAME URL TAG)
     string(TOUPPER ${NAME} UP_NAME)
 
     set(INCLUDE_${UP_NAME} "local" CACHE STRING "Use ${NAME} library form local built, system or disable usage.")
@@ -24,6 +24,7 @@ function(AddExternalProject NAME LIB_NAME URL)
                 ExternalProject_Add(
                     lib${NAME}
                     GIT_REPOSITORY ${URL}
+                    GIT_TAG ${TAG}
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
                     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}
                     TMP_DIR ${PROJECT_BINARY_DIR}/${NAME}-tmp
@@ -75,6 +76,7 @@ AddExternalProject(
     "hyperscan"
     "hs"
     "https://github.com/01org/hyperscan.git"
+    "master"
     -DCMAKE_BUILD_TYPE=Release -DFAT_RUNTIME=OFF -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
@@ -83,6 +85,7 @@ AddExternalProject(
     "oniguruma"
     "onig"
     "https://github.com/kkos/oniguruma.git"
+    "master"
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
@@ -91,6 +94,7 @@ AddExternalProject(
     "re2"
     "re2"
     "https://github.com/google/re2.git"
+    "main"
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
@@ -99,6 +103,7 @@ AddExternalProject(
     "tre"
     "tre"
     "https://github.com/laurikari/tre.git"
+    "master"
     cd ${CMAKE_CURRENT_SOURCE_DIR}/tre/ && ./utils/autogen.sh && cd ${PROJECT_BINARY_DIR}/tre-build && ${CMAKE_CURRENT_SOURCE_DIR}/tre/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
@@ -106,6 +111,7 @@ AddExternalProject(
 AddExternalProject(
     "pcre2"
     "pcre2-8"
-    "https://ftp.pcre.org/pub/pcre/pcre2-10.23.tar.gz"
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcre2/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local --enable-unicode --enable-jit
+    "https://github.com/PhilipHazel/pcre2.git"
+    "master"
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local -DPCRE2_SUPPORT_JIT=ON
 )
