@@ -15,6 +15,9 @@ struct engines {
 };
 
 static struct engines engines [] = {
+#ifdef INCLUDE_CPPSTD
+    {.name = "cppstd",        .find_all = cppstd_find_all},
+#endif
 #ifdef INCLUDE_PCRE2
     {.name = "pcre",        .find_all = pcre2_std_find_all},
     {.name = "pcre-dfa",    .find_all = pcre2_dfa_find_all},

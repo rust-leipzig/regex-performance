@@ -115,3 +115,8 @@ AddExternalProject(
     "master"
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local -DPCRE2_SUPPORT_JIT=ON
 )
+
+# c++ standard
+set(INCLUDE_CPPSTD "system" CACHE STRING "Use cppstd library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_CPPSTD PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include cppstd: ${INCLUDE_CPPSTD}")

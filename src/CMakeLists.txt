@@ -38,6 +38,12 @@ if(NOT ${INCLUDE_RE2} MATCHES "disabled")
     set(REGEX_ENGINES ${REGEX_ENGINES} re2)
 endif()
 
+if(NOT ${INCLUDE_CPPSTD} MATCHES "disabled")
+    add_definitions(-DINCLUDE_CPPSTD)
+    set(REGEX_SOURCES ${REGEX_SOURCES} cppstd.cpp)
+    #set(REGEX_ENGINES ${REGEX_ENGINES} cppstd )
+endif()
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/vendor/local/include
     ${CMAKE_CURRENT_SOURCE_DIR}/rust/include
