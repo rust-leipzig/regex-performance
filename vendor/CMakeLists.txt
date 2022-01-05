@@ -120,3 +120,18 @@ AddExternalProject(
 set(INCLUDE_CPPSTD "system" CACHE STRING "Use cppstd library form local built, system or disable usage.")
 set_property(CACHE INCLUDE_CPPSTD PROPERTY STRINGS "local" "system" "disabled")
 message("-- Include cppstd: ${INCLUDE_CPPSTD}")
+
+# ctre
+# 
+AddExternalProject(
+    "ctre"
+    "ctre"
+    "https://github.com/hanickadot/compile-time-regular-expressions.git"
+    "master"
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local 
+)
+
+# boost - I'm not going to build boost here
+set(INCLUDE_BOOST "system" CACHE STRING "Use boost::regex library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_BOOST PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include boost: ${INCLUDE_BOOST}")

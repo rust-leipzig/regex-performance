@@ -15,6 +15,9 @@ struct engines {
 };
 
 static struct engines engines [] = {
+#ifdef INCLUDE_BOOST
+    {.name = "boost",        .find_all = boost_find_all},
+#endif
 #ifdef INCLUDE_CPPSTD
     {.name = "cppstd",        .find_all = cppstd_find_all},
 #endif

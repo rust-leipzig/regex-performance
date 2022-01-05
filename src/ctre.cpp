@@ -2,23 +2,26 @@
 #include <string.h>
 
 #include "main.h"
-#include <regex>
 
 
 static int search_all( std::regex& rx, const std::string& text )
 {
-    auto words_begin = std::sregex_iterator( text.begin(), text.end(), rx );
+    auto words_begin = 
+        std::sregex_iterator( text.begin(), text.end(), rx );
     auto words_end = std::sregex_iterator();
-    return std::distance(words_begin, words_end);    
+    int found = std::distance(words_begin, words_end);
+    return found;
 }
 
-extern "C" int cppstd_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
+
+
+extern "C" int ctre_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
     TIME_TYPE start, end = 0;
     int found = 0;
 
     try {
-        std::regex rx(pattern);//,std::regex::optimize|std::regex::extended);
+        std::regex rx(pattern,std::regex::optimize|std::regex::extended);
         std::string text( subject, subject_len );
 
         double * times = (double*) std::calloc(repeat, sizeof(double));

@@ -2,23 +2,23 @@
 #include <string.h>
 
 #include "main.h"
-#include <regex>
+#include <boost/regex.hpp>
 
 
-static int search_all( std::regex& rx, const std::string& text )
+static int search_all( boost::regex& rx, const std::string& text )
 {
-    auto words_begin = std::sregex_iterator( text.begin(), text.end(), rx );
-    auto words_end = std::sregex_iterator();
+    auto words_begin = boost::sregex_iterator( text.begin(), text.end(), rx );
+    auto words_end = boost::sregex_iterator();
     return std::distance(words_begin, words_end);    
 }
 
-extern "C" int cppstd_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
+extern "C" int boost_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res)
 {
     TIME_TYPE start, end = 0;
     int found = 0;
 
     try {
-        std::regex rx(pattern);//,std::regex::optimize|std::regex::extended);
+        boost::regex rx(pattern,boost::regex::optimize|boost::regex::extended);
         std::string text( subject, subject_len );
 
         double * times = (double*) std::calloc(repeat, sizeof(double));

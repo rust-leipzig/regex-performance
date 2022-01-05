@@ -22,6 +22,9 @@ struct result {
 void get_mean_and_derivation(double * times, uint32_t times_len, struct result * res);
 void printResult(char * name, struct result * res);
 
+#ifdef INCLUDE_BOOST
+int boost_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res);
+#endif
 #ifdef INCLUDE_CPPSTD
 int cppstd_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res);
 #endif
