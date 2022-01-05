@@ -15,6 +15,9 @@ struct engines {
 };
 
 static struct engines engines [] = {
+#ifdef INCLUDE_CTRE
+    {.name = "ctre",        .find_all = ctre_find_all},
+#endif
 #ifdef INCLUDE_BOOST
     {.name = "boost",        .find_all = boost_find_all},
 #endif
@@ -59,7 +62,8 @@ static char * regex [] = {
     "([A-Za-z]awyer|[A-Za-z]inn)\\s",
     "[\"'][^\"']{0,30}[?!\\.][\"']",
     "\u221E|\u2713",
-    "\\p{Sm}"                               // any mathematical symbol
+    "\\p{Sm}",                               // any mathematical symbol
+    "(.*?,){13}z"
 };
 
 void load(char const * file_name)
