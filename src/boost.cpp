@@ -18,7 +18,7 @@ extern "C" int boost_find_all(char* pattern, char* subject, int subject_len, int
     int found = 0;
 
     try {
-        boost::regex rx(pattern,boost::regex::optimize|boost::regex::extended);
+        boost::regex rx(pattern,boost::regex::optimize );//|boost::regex::extended);
         std::string text( subject, subject_len );
 
         double * times = (double*) std::calloc(repeat, sizeof(double));

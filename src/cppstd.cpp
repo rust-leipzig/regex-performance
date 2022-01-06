@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include <regex>
+#include <iostream>
 
 
 static int search_all( std::regex& rx, const std::string& text )
@@ -18,7 +19,7 @@ extern "C" int cppstd_find_all(char* pattern, char* subject, int subject_len, in
     int found = 0;
 
     try {
-        std::regex rx(pattern);//,std::regex::optimize|std::regex::extended);
+        std::regex rx(pattern,std::regex::optimize);//|std::regex::extended);
         std::string text( subject, subject_len );
 
         double * times = (double*) std::calloc(repeat, sizeof(double));
@@ -37,7 +38,8 @@ extern "C" int cppstd_find_all(char* pattern, char* subject, int subject_len, in
         get_mean_and_derivation(times, times_len, res);
 
         free(times);
-    } catch ( ... ) {
+    } catch ( std::exception& ex ) {
+        std::cerr << "Exception thrown compiling regex [" << pattern << "]:" << ex.what() << std::endl;
         res->time = 999999;
         res->time_sd = 0;
         res->matches = 0;

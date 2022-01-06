@@ -7,7 +7,7 @@
 #include "main.h"
 #include <ctre.hpp>
 
-using RegexFn = std::function<int(const std::string &)>;
+using RegexFn = std::function<int(const std::string_view &)>;
 using RegexMap = std::unordered_map<std::string, RegexFn>;
 
 #define ENTRY(STR)                                  \
