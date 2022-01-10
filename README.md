@@ -81,3 +81,7 @@ You can specify a file to write the test results per expression and engine:
 ./src/regex_perf -f ./3200.txt -o ./results.csv
 ```
 The test tool writes the results in a csv-compatible format.
+
+## Results 
+
+![Shootout Performance Results](results_20220105.png "Performance Results")
