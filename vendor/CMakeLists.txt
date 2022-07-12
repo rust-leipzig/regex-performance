@@ -127,7 +127,7 @@ AddExternalProject(
     "ctre"
     "ctre"
     "https://github.com/hanickadot/compile-time-regular-expressions.git"
-    "master"
+    "main"
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local 
 )
 
