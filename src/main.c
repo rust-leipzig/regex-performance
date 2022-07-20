@@ -41,6 +41,9 @@ static struct engines engines [] = {
 #ifdef INCLUDE_HYPERSCAN
     {.name = "hscan",       .find_all = hs_find_all},
 #endif
+#ifdef INCLUDE_YARA
+    {.name = "yara",        .find_all = yara_find_all},
+#endif
     {.name = "rust_regex",  .find_all = rust_find_all},
     {.name = "rust_regrs",  .find_all = regress_find_all},
 };

@@ -55,6 +55,12 @@ if(NOT ${INCLUDE_BOOST} MATCHES "disabled")
     set(REGEX_ENGINES ${REGEX_ENGINES} boost_regex)
 endif()
 
+if(NOT ${INCLUDE_YARA} MATCHES "disabled")
+    add_definitions(-DINCLUDE_YARA)
+    set(REGEX_SOURCES ${REGEX_SOURCES} yara.c)
+    set(REGEX_ENGINES ${REGEX_ENGINES} yara)
+endif()
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/vendor/local/include
     ${CMAKE_CURRENT_SOURCE_DIR}/rust/include
