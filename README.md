@@ -26,6 +26,7 @@ and the sljit project (See their regex comparison [here](http://sljit.sourceforg
 
 ## Supported engines
 The following regex engines are supported and covered by the tool:
+- [CTRE](https://github.com/hanickadot/compile-time-regular-expressions)
 - [Hyperscan](https://github.com/01org/hyperscan)
 - [Oniguruma](https://github.com/kkos/oniguruma)
 - [RE2](https://github.com/google/re2)
@@ -33,9 +34,9 @@ The following regex engines are supported and covered by the tool:
 - [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 - [Regress regex crate](https://docs.rs/regress/)
-- [Compile Time Regular Expressions](https://github.com/hanickadot/compile-time-regular-expressions)
 - [Boost regex](https://www.boost.org/doc/libs/1_78_0/libs/regex/doc/html/index.html)
 - [C++ Standard regex](https://en.cppreference.com/w/cpp/regex)
+- [YARA](https://github.com/VirusTotal/yara)
 
 The engines are built from their sources. In the case an installed engine should be used,
 the corresponding cmake variable `INCLUDE_<name>` has to be set to `system`. The configuration script
@@ -86,6 +87,6 @@ You can specify a file to write the test results per expression and engine:
 ```
 The test tool writes the results in a csv-compatible format.
 
-## Results 
+## Results
 
 ![Shootout Performance Results](results_20220105.png "Performance Results")

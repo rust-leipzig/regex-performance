@@ -122,13 +122,23 @@ set_property(CACHE INCLUDE_CPPSTD PROPERTY STRINGS "local" "system" "disabled")
 message("-- Include cppstd: ${INCLUDE_CPPSTD}")
 
 # ctre
-# 
+#
 AddExternalProject(
     "ctre"
     "ctre"
     "https://github.com/hanickadot/compile-time-regular-expressions.git"
     "master"
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local 
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
+)
+
+# yara
+AddExternalProject(
+    "yara"
+    "yara"
+    "https://github.com/VirusTotal/yara.git"
+    "master"
+    cd ${CMAKE_CURRENT_SOURCE_DIR}/yara/ && ./bootstrap.sh && cd ${PROJECT_BINARY_DIR}/yara-build && ${CMAKE_CURRENT_SOURCE_DIR}/yara/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
+
 )
 
 # boost - I'm not going to build boost here
