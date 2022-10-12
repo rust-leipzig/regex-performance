@@ -12,7 +12,7 @@ and the sljit project (See their regex comparison [here](http://sljit.sourceforg
 | Cmake      | >=3.0    |
 | Ragel      | 6.9      |
 | Python     | >=3.0    |
-| Boost      | >=1.57   |
+| Boost (*2)  | >=1.57   |
 | Pcap       | >=0.8    |
 | Autoconf   | 2.69 (*) |
 | Automake   | 1.15 (*) |
@@ -22,6 +22,7 @@ and the sljit project (See their regex comparison [here](http://sljit.sourceforg
 | Git        | 2.11.0 (*)|
 
 (*) Tested with named version only. Older versions may work too.
+(*2) Needs boost-regex to be installed as a component
 
 ## Supported engines
 The following regex engines are supported and covered by the tool:
@@ -33,6 +34,8 @@ The following regex engines are supported and covered by the tool:
 - [PCRE2](http://www.pcre.org)
 - [Rust regex crate](https://doc.rust-lang.org/regex/regex/index.html)
 - [Regress regex crate](https://docs.rs/regress/)
+- [Boost regex](https://www.boost.org/doc/libs/1_78_0/libs/regex/doc/html/index.html)
+- [C++ Standard regex](https://en.cppreference.com/w/cpp/regex)
 - [YARA](https://github.com/VirusTotal/yara)
 
 The engines are built from their sources. In the case an installed engine should be used,
