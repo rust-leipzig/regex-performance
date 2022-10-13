@@ -87,6 +87,19 @@ You can specify a file to write the test results per expression and engine:
 ```
 The test tool writes the results in a csv-compatible format.
 
+## Spreadsheet generator
+
+We included a spreadsheet generator for easy visualization of the results. 
+Once you have ran the results and obtained the `results.csv` file, you can create a spreadsheet
+with (assuming you are still in the build directory)
+```bash
+python3 ../genspreadsheet.py results.csv
+```
+It will save an Excel spreadsheet with the name `regex-results-YYYYMMDD-HHMMSS.xlsx` in the current
+directory. 
+
 ## Results
 
-![Shootout Performance Results](results_20220105.png "Performance Results")
+These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 
+
+![Updated Performance Results](results_20221012.png "Performance Results")
