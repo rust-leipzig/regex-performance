@@ -126,8 +126,8 @@ cmake \
 
 These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 
 
-![Updated Performance Results](results_20221012.png "Performance Results")
+![Updated Performance Results](results_threadripper.png "Performance Results")
 
-IceLake Xeon Platinum 8375C @ 2.90GHz (AWS C6i instance)
+IceLake Xeon Platinum 8375C @ 2.90GHz (AWS C6i instance) - no mitigations
 
 ![IceLake Server](results_icelake.png "Results Ice Lake")

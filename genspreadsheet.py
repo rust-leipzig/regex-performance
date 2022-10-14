@@ -32,13 +32,13 @@ outfilename = "regex-results-%s.xlsx" % (nowstr,)
 workbook = xlsxwriter.Workbook(outfilename)
 worksheet = workbook.add_worksheet()
 worksheet.hide_gridlines(2)
-worksheet.set_column(0,0,30)
+worksheet.set_column(0,0,35)
 worksheet.set_column(1,len(scanners),10)
 worksheet.set_row(0,20)
 
 # Add a bold format to use to highlight cells.
 headerfmt = workbook.add_format({'bold': True})
-headerfmt.set_bg_color('black')
+headerfmt.set_bg_color('gray')
 headerfmt.set_font_color('white')
 headerfmt.set_rotation(0)
 highfmt = workbook.add_format({'bold': True})
@@ -53,7 +53,7 @@ warnfmt.set_font_color( 'black' )
 warnfmt.set_align('center')
 
 # Write headers.
-scanners = list(scanners)
+scanners = sorted(list(scanners))
 row = 0
 for col,scanner in enumerate(scanners):
     worksheet.write( row, col+1, scanner, headerfmt )
