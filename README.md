@@ -98,6 +98,23 @@ python3 ../genspreadsheet.py results.csv
 It will save an Excel spreadsheet with the name `regex-results-YYYYMMDD-HHMMSS.xlsx` in the current
 directory. 
 
+## Compiling with clang + libc++
+
+Unfortunately it is not possible to run both standard C++ from GCC/stdlibc++ and clang+libc++ at the 
+same time, it is just the way that cmake selects a single compiler. 
+
+To run with clang+libc++ use the following recipe:
+```bash
+mkdir build && cd build
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_EXE_LINKER_FLAGS="-lc++abi -lc++"  \
+    -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++ \
+    -DCMAKE_C_COMPILER=/usr/local/bin/clang \
+    -DCMAKE_CXX_FLAGS_INIT="-std=c++20 -stdlib=libc++ -march=native -mtune=native" \
+    -G Ninja ..
+```
+
 ## Results
 
 These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 

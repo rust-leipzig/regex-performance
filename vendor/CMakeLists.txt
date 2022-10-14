@@ -71,13 +71,58 @@ function(AddExternalProject NAME LIB_NAME URL TAG)
     endif()
 endfunction()
 
+
+# building a minimal boost with just boost::regex
+ExternalProject_Add(
+    libboost
+    GIT_REPOSITORY "https://github.com/boostorg/boost.git"
+    GIT_TAG master
+    GIT_SUBMODULES 
+        tools/build                                                                              
+        tools/boost_install
+        libs/regex 
+        libs/config 
+        libs/headers
+        libs/throw_exception
+        libs/exception
+        libs/assert
+    GIT_SHALLOW ON
+    GIT_SUBMODULES_RECURSE OFF
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
+    TMP_DIR ${PROJECT_BINARY_DIR}/boost-tmp
+    STAMP_DIR ${PROJECT_BINARY_DIR}/boost-stamp
+    BINARY_DIR ${PROJECT_BINARY_DIR}/boost-build
+    DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/boost-down
+    CONFIGURE_COMMAND 
+        cd ${CMAKE_CURRENT_SOURCE_DIR}/boost &&
+        ./bootstrap.sh 
+    BUILD_COMMAND 
+        cd ${CMAKE_CURRENT_SOURCE_DIR}/boost &&
+        ./b2 headers &&
+        ./b2 install -q -a
+        --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local 
+        --build-type=minimal  
+        --layout=system 
+        --disable-icu
+        --with-regex 
+        variant=release link=static runtime-link=static 
+        threading=single address-model=64 architecture=x86 
+    INSTALL_COMMAND ""
+)
+
+set(INCLUDE_BOOST "local" CACHE STRING "Use boost::regex library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_BOOST PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include boost: ${INCLUDE_BOOST}")
+
 # hyperscan
 AddExternalProject(
     "hyperscan"
     "hs"
     "https://github.com/01org/hyperscan.git"
     "master"
-    -DCMAKE_BUILD_TYPE=Release -DFAT_RUNTIME=OFF -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
+    -DCMAKE_BUILD_TYPE=Release -DFAT_RUNTIME=OFF 
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
 # oniguruma
@@ -86,7 +131,8 @@ AddExternalProject(
     "onig"
     "https://github.com/kkos/oniguruma.git"
     "master"
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
+    -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=OFF -DINSTALL_DOCUMENTATION=OFF 
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
 # re2
@@ -95,7 +141,8 @@ AddExternalProject(
     "re2"
     "https://github.com/google/re2.git"
     "main"
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
+    -DCMAKE_BUILD_TYPE=Release 
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
 # tre
@@ -104,7 +151,10 @@ AddExternalProject(
     "tre"
     "https://github.com/laurikari/tre.git"
     "master"
-    cd ${CMAKE_CURRENT_SOURCE_DIR}/tre/ && ./utils/autogen.sh && cd ${PROJECT_BINARY_DIR}/tre-build && ${CMAKE_CURRENT_SOURCE_DIR}/tre/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
+    cd ${CMAKE_CURRENT_SOURCE_DIR}/tre/ && 
+    ./utils/autogen.sh && cd ${PROJECT_BINARY_DIR}/tre-build && 
+    ${CMAKE_CURRENT_SOURCE_DIR}/tre/configure 
+        --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
 # pcre2
@@ -113,7 +163,9 @@ AddExternalProject(
     "pcre2-8"
     "https://github.com/PhilipHazel/pcre2.git"
     "master"
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local -DPCRE2_SUPPORT_JIT=ON
+    -DCMAKE_BUILD_TYPE=Release 
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local 
+    -DPCRE2_SUPPORT_JIT=ON
 )
 
 # c++ standard
@@ -127,8 +179,9 @@ AddExternalProject(
     "ctre"
     "ctre"
     "https://github.com/hanickadot/compile-time-regular-expressions.git"
-    "master"
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
+    "main"
+    -DCMAKE_BUILD_TYPE=Release 
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
 )
 
 # yara
@@ -137,11 +190,13 @@ AddExternalProject(
     "yara"
     "https://github.com/VirusTotal/yara.git"
     "master"
-    cd ${CMAKE_CURRENT_SOURCE_DIR}/yara/ && ./bootstrap.sh && cd ${PROJECT_BINARY_DIR}/yara-build && ${CMAKE_CURRENT_SOURCE_DIR}/yara/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
+    cd ${CMAKE_CURRENT_SOURCE_DIR}/yara/ && 
+    ./bootstrap.sh && 
+    cd ${PROJECT_BINARY_DIR}/yara-build && 
+    ${CMAKE_CURRENT_SOURCE_DIR}/yara/configure 
+         --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
 
 )
 
-# boost - I'm not going to build boost here
-set(INCLUDE_BOOST "system" CACHE STRING "Use boost::regex library form local built, system or disable usage.")
-set_property(CACHE INCLUDE_BOOST PROPERTY STRINGS "local" "system" "disabled")
-message("-- Include boost: ${INCLUDE_BOOST}")
+
+

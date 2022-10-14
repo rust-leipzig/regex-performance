@@ -8,13 +8,8 @@ if len(sys.argv)<2:
     print("Usage: genspreadsheet.py <results.txt>\n")
     sys.exit(0)
 
-regexre = re.compile('Regex:\s*(.*)')
-resultre = re.compile('\[\s*(\S+)\]\s*time:\s*([\d\.]+).*matches:\s*(\d+)')
-
 infilename = sys.argv[1]
-current_regex = None
 results = {}
-stats = None
 scanners = set()
 with open( infilename, "r" ) as filein:
     headers = filein.readline().split(';')
@@ -42,9 +37,10 @@ worksheet.set_column(1,len(scanners),10)
 worksheet.set_row(0,20)
 
 # Add a bold format to use to highlight cells.
-bold = workbook.add_format({'bold': True})
-boldrot = workbook.add_format({'bold': True})
-boldrot.set_rotation(0)
+headerfmt = workbook.add_format({'bold': True})
+headerfmt.set_bg_color('black')
+headerfmt.set_font_color('white')
+headerfmt.set_rotation(0)
 highfmt = workbook.add_format({'bold': True})
 highfmt.set_bg_color( 'orange' )
 highfmt.set_font_color( 'white' )
@@ -56,19 +52,19 @@ warnfmt.set_bg_color( 'yellow' )
 warnfmt.set_font_color( 'black' )
 warnfmt.set_align('center')
 
-# Write some data headers.
+# Write headers.
 scanners = list(scanners)
 row = 0
 for col,scanner in enumerate(scanners):
-    worksheet.write( row, col+1, scanner, boldrot )
-worksheet.write( row, 0, "Regex", bold)
+    worksheet.write( row, col+1, scanner, headerfmt )
+worksheet.write( row, 0, "Regex", headerfmt )
 
 for regex,stats in results.items():
     values = sorted([ ms for ms in stats.values() ])
     lowcut = values[1]
     highcut = values[-2]
     row += 1
-    worksheet.write( row, 0, regex, bold )
+    worksheet.write( row, 0, regex, headerfmt )
     for col,scanner in enumerate(scanners):
         if scanner not in stats:
             worksheet.write( row, col+1, "n/a", warnfmt )
