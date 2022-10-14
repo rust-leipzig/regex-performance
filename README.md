@@ -51,6 +51,13 @@ regex crate for defined expressions.
 The different engines have different requirements which are not described here.
 Please see the related project documentations.
 
+On Ubuntu 20.04 these were necessary installs to get the build done from a stock AWS box
+```bash
+$ apt install build-essential cmake rustc cargo automake autoconf autopoint autogen \
+   libtool libprotobuf-dev libprotobuf-c-dev protobuf-compiler ninja-build \
+   ragel libpcap pcaputils pkg-config libboost-dev flex bison
+```
+
 In the case all depencies are fulfilled, just configure and build the cmake based project:
 
 ```bash
@@ -120,3 +127,7 @@ cmake \
 These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 
 
 ![Updated Performance Results](results_20221012.png "Performance Results")
+
+IceLake Xeon Platinum 8375C @ 2.90GHz (AWS C6i instance)
+
+![IceLake Server](results_icelake.png "Results Ice Lake")
