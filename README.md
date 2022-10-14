@@ -51,6 +51,13 @@ regex crate for defined expressions.
 The different engines have different requirements which are not described here.
 Please see the related project documentations.
 
+On Ubuntu 20.04 these were necessary installs to get the build done from a stock AWS box
+```bash
+$ apt install build-essential cmake rustc cargo automake autoconf autopoint autogen \
+   libtool libprotobuf-dev libprotobuf-c-dev protobuf-compiler ninja-build \
+   ragel libpcap pcaputils pkg-config libboost-dev flex bison
+```
+
 In the case all depencies are fulfilled, just configure and build the cmake based project:
 
 ```bash
@@ -98,8 +105,29 @@ python3 ../genspreadsheet.py results.csv
 It will save an Excel spreadsheet with the name `regex-results-YYYYMMDD-HHMMSS.xlsx` in the current
 directory. 
 
+## Compiling with clang + libc++
+
+Unfortunately it is not possible to run both standard C++ from GCC/stdlibc++ and clang+libc++ at the 
+same time, it is just the way that cmake selects a single compiler. 
+
+To run with clang+libc++ use the following recipe:
+```bash
+mkdir build && cd build
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_EXE_LINKER_FLAGS="-lc++abi -lc++"  \
+    -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++ \
+    -DCMAKE_C_COMPILER=/usr/local/bin/clang \
+    -DCMAKE_CXX_FLAGS_INIT="-std=c++20 -stdlib=libc++ -march=native -mtune=native" \
+    -G Ninja ..
+```
+
 ## Results
 
 These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 
 
-![Updated Performance Results](results_20221012.png "Performance Results")
+![Updated Performance Results](results_threadripper.png "Performance Results")
+
+IceLake Xeon Platinum 8375C @ 2.90GHz (AWS C6i instance) - no mitigations
+
+![IceLake Server](results_icelake.png "Results Ice Lake")
