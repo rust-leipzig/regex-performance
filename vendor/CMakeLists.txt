@@ -9,7 +9,7 @@ include(ExternalProject)
 function(AddExternalProject NAME LIB_NAME URL TAG)
     string(TOUPPER ${NAME} UP_NAME)
 
-    set(INCLUDE_${UP_NAME} "local" CACHE STRING "Use ${NAME} library form local built, system or disable usage.")
+    set(INCLUDE_${UP_NAME} "system" CACHE STRING "Use ${NAME} library form local built, system or disable usage.")
     set_property(CACHE INCLUDE_${UP_NAME} PROPERTY STRINGS "local" "system" "disabled")
 
     message("-- Include ${NAME}: ${INCLUDE_${UP_NAME}}")
@@ -25,6 +25,7 @@ function(AddExternalProject NAME LIB_NAME URL TAG)
                     lib${NAME}
                     GIT_REPOSITORY ${URL}
                     GIT_TAG ${TAG}
+                    GIT_EXECUTABLE /usr/bin/git
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
                     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}
                     TMP_DIR ${PROJECT_BINARY_DIR}/${NAME}-tmp
@@ -37,6 +38,7 @@ function(AddExternalProject NAME LIB_NAME URL TAG)
                 ExternalProject_Add(
                     lib${NAME}
                     GIT_REPOSITORY ${URL}
+                    GIT_EXECUTABLE /usr/bin/git
                     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
                     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}
                     TMP_DIR ${PROJECT_BINARY_DIR}/${NAME}-tmp
@@ -72,131 +74,81 @@ function(AddExternalProject NAME LIB_NAME URL TAG)
 endfunction()
 
 
-# building a minimal boost with just boost::regex
-ExternalProject_Add(
-    libboost
-    GIT_REPOSITORY "https://github.com/boostorg/boost.git"
-    GIT_TAG master
-    GIT_SUBMODULES 
-        tools/build                                                                              
-        tools/boost_install
-        libs/regex 
-        libs/config 
-        libs/headers
-        libs/throw_exception
-        libs/exception
-        libs/assert
-    GIT_SHALLOW ON
-    GIT_SUBMODULES_RECURSE OFF
-    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
-    TMP_DIR ${PROJECT_BINARY_DIR}/boost-tmp
-    STAMP_DIR ${PROJECT_BINARY_DIR}/boost-stamp
-    BINARY_DIR ${PROJECT_BINARY_DIR}/boost-build
-    DOWNLOAD_DIR ${PROJECT_BINARY_DIR}/boost-down
-    CONFIGURE_COMMAND 
-        cd ${CMAKE_CURRENT_SOURCE_DIR}/boost &&
-        ./bootstrap.sh 
-    BUILD_COMMAND 
-        cd ${CMAKE_CURRENT_SOURCE_DIR}/boost &&
-        ./b2 headers &&
-        ./b2 install -q -a
-        --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local 
-        --build-type=minimal  
-        --layout=system 
-        --disable-icu
-        --with-regex 
-        variant=release link=static runtime-link=static 
-        threading=single address-model=64 architecture=x86 
-    INSTALL_COMMAND ""
-)
 
-set(INCLUDE_BOOST "local" CACHE STRING "Use boost::regex library form local built, system or disable usage.")
+# PCRE2
+set(INCLUDE_PCRE2 "system" CACHE STRING "Use pcre2 library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_PCRE2 PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include pcre2: ${INCLUDE_PCRE2}")
+if(INCLUDE_PCRE2 MATCHES "system")
+    find_library(LIB_PCRE2 pcre2-8 ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_PCRE2)
+        message(FATAL_ERROR "   > Library 'pcre2-8' not found on system.\n")
+    else()
+        message("  > Found pcre2 library: ${LIB_PCRE2}\n")
+    endif()
+endif()
+
+# Oniguruma
+set(INCLUDE_ONIGURUMA "system" CACHE STRING "Use oniguruma library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_ONIGURUMA PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include oniguruma: ${INCLUDE_ONIGURUMA}")
+if(INCLUDE_ONIGURUMA MATCHES "system")
+    find_library(LIB_ONIGURUMA onig ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_ONIGURUMA)
+        message(FATAL_ERROR "   > Library 'onig' not found on system.\n")
+    else()
+        message("  > Found oniguruma library: ${LIB_ONIGURUMA}\n")
+    endif()
+endif()
+
+# TRE
+set(INCLUDE_TRE "system" CACHE STRING "Use tre library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_TRE PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include tre: ${INCLUDE_TRE}")
+if(INCLUDE_TRE MATCHES "system")
+    find_library(LIB_TRE tre ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_TRE)
+        message(FATAL_ERROR "   > Library 'tre' not found on system.\n")
+    else()
+        message("  > Found tre library: ${LIB_TRE}\n")
+    endif()
+endif()
+
+# RE2
+set(INCLUDE_RE2 "system" CACHE STRING "Use re2 library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_RE2 PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include re2: ${INCLUDE_RE2}")
+if(INCLUDE_RE2 MATCHES "system")
+    find_library(LIB_RE2 re2 ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_RE2)
+        message(FATAL_ERROR "   > Library 're2' not found on system.\n")
+    else()
+        message("  > Found re2 library: ${LIB_RE2}\n")
+    endif()
+endif()
+
+# CTRE (header-only)
+set(INCLUDE_CTRE "system" CACHE STRING "Use ctre library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_CTRE PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include ctre: ${INCLUDE_CTRE}")
+
+set(INCLUDE_BOOST "system" CACHE STRING "Use boost::regex library form local built, system or disable usage.")
 set_property(CACHE INCLUDE_BOOST PROPERTY STRINGS "local" "system" "disabled")
 message("-- Include boost: ${INCLUDE_BOOST}")
-
-# hyperscan
-AddExternalProject(
-    "hyperscan"
-    "hs"
-    "https://github.com/01org/hyperscan.git"
-    "master"
-    -DCMAKE_BUILD_TYPE=Release -DFAT_RUNTIME=OFF 
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
-)
-
-# oniguruma
-AddExternalProject(
-    "oniguruma"
-    "onig"
-    "https://github.com/kkos/oniguruma.git"
-    "master"
-    -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=OFF -DINSTALL_DOCUMENTATION=OFF 
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
-)
-
-# re2
-AddExternalProject(
-    "re2"
-    "re2"
-    "https://github.com/google/re2.git"
-    "main"
-    -DCMAKE_BUILD_TYPE=Release 
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
-)
-
-# tre
-AddExternalProject(
-    "tre"
-    "tre"
-    "https://github.com/laurikari/tre.git"
-    "master"
-    cd ${CMAKE_CURRENT_SOURCE_DIR}/tre/ && 
-    ./utils/autogen.sh && cd ${PROJECT_BINARY_DIR}/tre-build && 
-    ${CMAKE_CURRENT_SOURCE_DIR}/tre/configure 
-        --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
-)
-
-# pcre2
-AddExternalProject(
-    "pcre2"
-    "pcre2-8"
-    "https://github.com/PhilipHazel/pcre2.git"
-    "master"
-    -DCMAKE_BUILD_TYPE=Release 
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local 
-    -DPCRE2_SUPPORT_JIT=ON
-)
+if(INCLUDE_BOOST MATCHES "system")
+    find_library(LIB_BOOST boost_regex ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_BOOST)
+        message(FATAL_ERROR "   > Library 'boost_regex' not found on system.\n")
+    else()
+        message("  > Found boost library: ${LIB_BOOST}\n")
+    endif()
+endif()
 
 # c++ standard
 set(INCLUDE_CPPSTD "system" CACHE STRING "Use cppstd library form local built, system or disable usage.")
 set_property(CACHE INCLUDE_CPPSTD PROPERTY STRINGS "local" "system" "disabled")
 message("-- Include cppstd: ${INCLUDE_CPPSTD}")
 
-# ctre
-#
-AddExternalProject(
-    "ctre"
-    "ctre"
-    "https://github.com/hanickadot/compile-time-regular-expressions.git"
-    "main"
-    -DCMAKE_BUILD_TYPE=Release 
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_SOURCE_DIR}/local
-)
-
-# yara
-AddExternalProject(
-    "yara"
-    "yara"
-    "https://github.com/VirusTotal/yara.git"
-    "master"
-    cd ${CMAKE_CURRENT_SOURCE_DIR}/yara/ && 
-    ./bootstrap.sh && 
-    cd ${PROJECT_BINARY_DIR}/yara-build && 
-    ${CMAKE_CURRENT_SOURCE_DIR}/yara/configure 
-         --prefix=${CMAKE_CURRENT_SOURCE_DIR}/local
-
-)
 
 
 
