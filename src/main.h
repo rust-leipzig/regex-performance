@@ -16,11 +16,26 @@ struct result {
     int score;
     double time;
     double time_sd;
+    double confidence_95_lower;
+    double confidence_95_upper;
     int matches;
+    int samples_used;  // How many samples after outlier removal
+
+    // Memory usage tracking
+    long memory_peak_kb;      // Peak memory usage during execution
+    long memory_rss_peak_kb;  // Peak resident set size
+    long memory_start_kb;     // Baseline memory before execution
+    long memory_delta_kb;     // Memory increase during execution
 };
 
 void get_mean_and_derivation(double * times, uint32_t times_len, struct result * res);
 void printResult(char * name, struct result * res);
+void cleanup_data(void);
+int validate_results(char* pattern, struct result* results, char** engine_names, int num_engines);
+int needs_warmup(const char* engine_name);
+long get_memory_usage_kb(const char* metric);
+void record_memory_baseline(struct result* res);
+void record_memory_peak(struct result* res);
 
 #ifdef INCLUDE_CTRE
 int ctre_find_all(char* pattern, char* subject, int subject_len, int repeat, struct result * res);

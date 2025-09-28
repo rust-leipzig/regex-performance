@@ -41,7 +41,7 @@ endif()
 if(NOT ${INCLUDE_RE2} MATCHES "disabled")
     add_definitions(-DINCLUDE_RE2)
     set(REGEX_SOURCES ${REGEX_SOURCES} re2.cpp)
-    set(REGEX_ENGINES ${REGEX_ENGINES} re2)
+    # Note: RE2 is linked via CMake target, not added to REGEX_ENGINES
 endif()
 
 if(NOT ${INCLUDE_CPPSTD} MATCHES "disabled")
@@ -78,4 +78,13 @@ add_executable(regex_perf ${REGEX_SOURCES})
 
 add_dependencies(regex_perf librregex)
 
-target_link_libraries(regex_perf rregex ${REGEX_ENGINES} pthread dl)
+# Use CMake to find and link dependencies properly
+set(EXTRA_LIBRARIES "")
+if(NOT ${INCLUDE_RE2} MATCHES "disabled")
+    # Set the prefix path so CMake can find our locally built packages
+    list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/vendor/local")
+    find_package(re2 REQUIRED)
+    set(EXTRA_LIBRARIES re2::re2)
+endif()
+
+target_link_libraries(regex_perf rregex ${REGEX_ENGINES} ${EXTRA_LIBRARIES} pthread dl)
