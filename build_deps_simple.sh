@@ -217,6 +217,20 @@ else
     echo "Boost already built, skipping..."
 fi
 
+echo "=== Building Hyperscan ==="
+if [ ! -f "$LOCAL_DIR/lib/libhs.a" ]; then
+    clone_or_update "hyperscan" "https://github.com/intel/hyperscan.git" "master"
+    cd hyperscan
+    build_cmake "hyperscan" \
+        -DFAT_RUNTIME=OFF \
+        -DBUILD_EXAMPLES=OFF \
+        -DBUILD_STATIC_LIBS=ON \
+        -DBUILD_SHARED_LIBS=OFF
+    cd ..
+else
+    echo "Hyperscan already built, skipping..."
+fi
+
 echo "=== Setting up CTRE (header-only) ==="
 if [ ! -d "$LOCAL_DIR/include/ctre" ]; then
     echo "Cloning CTRE from GitHub..."
@@ -237,11 +251,12 @@ echo "✅ Oniguruma"
 echo "✅ TRE"
 echo "✅ Jansson (dependency for YARA)"
 echo "✅ YARA (with Jansson support)"
-echo "✅ RE2 (2023-03-01 version, CMake 3.16 compatible)"
+echo "✅ RE2 (latest version with Abseil dependencies)"
 echo "✅ Boost.Regex (minimal build with Clang)"
+echo "✅ Hyperscan (Intel's vectorized pattern matching)"
 echo "✅ CTRE (header-only, C++20 required)"
 echo "✅ Rust regex (built automatically by main project)"
 echo "✅ C++ std::regex (system)"
 echo ""
-echo "Total: 9 regex engines ready for benchmarking!"
+echo "Total: 11 regex engines ready for benchmarking!"
 echo "Now you can build the main project with these engines."

@@ -144,6 +144,32 @@ if(INCLUDE_BOOST MATCHES "system")
     endif()
 endif()
 
+# YARA
+set(INCLUDE_YARA "system" CACHE STRING "Use yara library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_YARA PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include yara: ${INCLUDE_YARA}")
+if(INCLUDE_YARA MATCHES "system")
+    find_library(LIB_YARA yara ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_YARA)
+        message(FATAL_ERROR "   > Library 'yara' not found on system.\n")
+    else()
+        message("  > Found yara library: ${LIB_YARA}\n")
+    endif()
+endif()
+
+# Hyperscan
+set(INCLUDE_HYPERSCAN "system" CACHE STRING "Use hyperscan library form local built, system or disable usage.")
+set_property(CACHE INCLUDE_HYPERSCAN PROPERTY STRINGS "local" "system" "disabled")
+message("-- Include hyperscan: ${INCLUDE_HYPERSCAN}")
+if(INCLUDE_HYPERSCAN MATCHES "system")
+    find_library(LIB_HYPERSCAN hs ${CMAKE_CURRENT_SOURCE_DIR}/local/lib)
+    if(NOT LIB_HYPERSCAN)
+        message(FATAL_ERROR "   > Library 'hs' not found on system.\n")
+    else()
+        message("  > Found hyperscan library: ${LIB_HYPERSCAN}\n")
+    endif()
+endif()
+
 # c++ standard
 set(INCLUDE_CPPSTD "system" CACHE STRING "Use cppstd library form local built, system or disable usage.")
 set_property(CACHE INCLUDE_CPPSTD PROPERTY STRINGS "local" "system" "disabled")

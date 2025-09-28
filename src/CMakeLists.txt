@@ -58,7 +58,7 @@ endif()
 if(NOT ${INCLUDE_YARA} MATCHES "disabled")
     add_definitions(-DINCLUDE_YARA)
     set(REGEX_SOURCES ${REGEX_SOURCES} yara.c)
-    set(REGEX_ENGINES ${REGEX_ENGINES} yara)
+    set(REGEX_ENGINES ${REGEX_ENGINES} yara jansson)
 endif()
 
 include_directories(

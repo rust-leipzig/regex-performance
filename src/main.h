@@ -12,6 +12,17 @@ extern "C" {
 #define TIME_DIFF_IN_MS(begin, end) (((double) (end - begin)) * 1000 / CLOCKS_PER_SEC)
 #define UNUSED __attribute__((unused))
 
+// Global timeout setting (in milliseconds)
+extern double timeout_ms;
+#define CHECK_TIMEOUT(start_time) \
+    do { \
+        TIME_TYPE now; \
+        GET_TIME(now); \
+        if (TIME_DIFF_IN_MS(start_time, now) > timeout_ms) { \
+            return -2; /* Timeout error code */ \
+        } \
+    } while(0)
+
 struct result {
     int score;
     double time;

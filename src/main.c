@@ -13,6 +13,9 @@
 static char* data = NULL;
 static int data_len = 0;
 
+// Global timeout setting (default 1 second)
+double timeout_ms = 1000.0;
+
 struct engines {
     char * name;
     int (*find_all)(char* pattern, char* subject, int subject_len, int repeat, struct result * result);
@@ -186,6 +189,16 @@ void find_all(char* pattern, char* subject, int subject_len, int repeat, struct 
             engine_results[iter].score = 0;
             engine_results[iter].samples_used = 0;
             // Memory fields are already set by record_memory_peak
+        } else if (ret == -2) {
+            // Timeout occurred
+            engine_results[iter].time = timeout_ms;
+            engine_results[iter].time_sd = 0;
+            engine_results[iter].confidence_95_lower = timeout_ms;
+            engine_results[iter].confidence_95_upper = timeout_ms;
+            engine_results[iter].matches = -1; // Indicate timeout
+            engine_results[iter].score = 0;
+            engine_results[iter].samples_used = 0;
+            printf("[%10s] time: TIMEOUT (>%.1f ms)\n", engines[iter].name, timeout_ms);
         } else {
             printResult(engines[iter].name, &(engine_results[iter]));
         }
@@ -508,7 +521,7 @@ int main(int argc, char **argv)
     int repeat = 5;
     int c = 0;
 
-    while ((c = getopt(argc, argv, "n:hvf:o:")) != -1) {
+    while ((c = getopt(argc, argv, "n:hvf:o:t:")) != -1) {
         switch (c) {
             case 'f':
                 file = optarg;
@@ -519,6 +532,13 @@ int main(int argc, char **argv)
             case 'o':
                 out_file = optarg;
                 break;
+            case 't':
+                timeout_ms = atof(optarg) * 1000.0; // Convert seconds to milliseconds
+                if (timeout_ms <= 0) {
+                    fprintf(stderr, "Timeout must be a positive number (in seconds)\n");
+                    exit(EXIT_FAILURE);
+                }
+                break;
             case 'v':
                 printf("%s\n", VERSION_STRING);
                 exit(EXIT_SUCCESS);
@@ -528,6 +548,7 @@ int main(int argc, char **argv)
                 printf("  -f\tInput file.\n");
                 printf("  -n\tSet number of repetitions. Default: 5\n");
                 printf("  -o\tWrite measured data into CSV file.\n");
+                printf("  -t\tSet timeout in seconds. Default: 1.0\n");
                 printf("  -v\tGet the application version and build date.\n");
                 printf("  -h\tPrint this help message\n\n");
                 exit(EXIT_SUCCESS);
