@@ -43,6 +43,10 @@ vendor/local/*
 src/rust/.cargo/config
 src/version.h
 
+# Excel temporary files
+.~lock.*#
+*.tmp
+
 # Sub projects
 vendor/pcre2/*
 

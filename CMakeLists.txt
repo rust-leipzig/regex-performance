@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(RegexPeformance C CXX)
+project(RegexPerformance C CXX)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 20)
@@ -21,7 +21,7 @@ set(CMAKE_C_FLAGS "-std=c11 ${GENERAL_C_FLAGS}" CACHE STRING "additional CFLAGS"
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${GENERAL_C_FLAGS}" CACHE STRING "additional CFLAGS" FORCE)
+set(CMAKE_CXX_FLAGS "-std=c++20 ${GENERAL_C_FLAGS}" CACHE STRING "additional CFLAGS" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
