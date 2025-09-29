@@ -48,6 +48,28 @@ src/version.h
 *.tmp
 
 # Sub projects
-vendor/pcre2/*
+vendor/pcre2/
+
+# Build dependency artifacts
+vendor/abseil-cpp/
+vendor/boost/
+vendor/ctre/
+vendor/jansson/
+vendor/yara/
+vendor/hyperscan/
+vendor/oniguruma/
+vendor/re2/
+vendor/tre/
+
+# Result files and benchmarks
+results*.txt
+results*.csv
+*.xlsx
+test_input.txt
+titles.md
+build_deps.sh
+
+# Screenshots
+*.png
 
 
