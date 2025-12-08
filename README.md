@@ -7,6 +7,15 @@ This tool is based on the work of John Maddock (See his own regex comparison [he
 and the sljit project (See their regex comparison [here](http://sljit.sourceforge.net/regex_perf.html)).
 
 ## Requirements
+
+### Modern Clang 19.1.6 Toolchain (Recommended)
+When using the modern toolchain build, all dependencies are automatically handled by the build script. Just ensure you have access to the toolchain environment:
+- Access to `/ssd/hblib-installer/ubuntu-20.04/tools/sourceme.sh`
+- CMake 3.24.2 (included in toolchain)
+- Clang 19.1.6 (included in toolchain)
+- All regex engine dependencies built automatically
+
+### Legacy System Requirements
 | dependency | version  |
 |------------|----------|
 | Cmake      | >=3.0    |
@@ -51,6 +60,38 @@ regex crate for defined expressions.
 The different engines have different requirements which are not described here.
 Please see the related project documentations.
 
+On Ubuntu 20.04 these were necessary installs to get the build done from a stock AWS box
+```bash
+$ apt install build-essential cmake rustc cargo automake autoconf autopoint autogen \
+   libtool libprotobuf-dev libprotobuf-c-dev protobuf-compiler ninja-build \
+   ragel libpcap pcaputils pkg-config libboost-dev flex bison
+```
+
+### Modern Clang 19.1.6 Toolchain Build (Recommended)
+
+For optimal performance with the latest toolchain, use the automated build script with the modern Clang 19.1.6 toolchain:
+
+```bash
+# Source the modern toolchain environment
+source /ssd/hblib-installer/ubuntu-20.04/tools/sourceme.sh
+
+# Clean build from scratch
+./build_deps_simple.sh
+
+# Build the main project
+mkdir -p build && cd build
+CC=clang CXX=clang++ cmake ..
+make -j$(nproc)
+```
+
+This approach:
+- Uses Clang 19.1.6 compiler with LLVM tools
+- Builds all dependencies with modern toolchain
+- Includes latest RE2 with Abseil dependencies
+- Supports all 11 regex engines with optimal performance
+
+### Legacy Build Method
+
 In the case all depencies are fulfilled, just configure and build the cmake based project:
 
 ```bash
@@ -71,6 +112,13 @@ make regex_perf
 The test tool calls each engine with a defined set of different regular expression on a given file.
 The repository contains a ~16Mbyte large text file (3200.txt) which can be used for measuring.
 
+```bash
+# When using modern toolchain, source the environment first
+source /ssd/hblib-installer/ubuntu-20.04/tools/sourceme.sh
+build/src/regex_perf -f 3200.txt
+```
+
+For legacy builds:
 ```bash
 ./src/regex_perf -f ./3200.txt
 ```
@@ -98,8 +146,38 @@ python3 ../genspreadsheet.py results.csv
 It will save an Excel spreadsheet with the name `regex-results-YYYYMMDD-HHMMSS.xlsx` in the current
 directory. 
 
+## Compiling with clang + libc++
+
+Unfortunately it is not possible to run both standard C++ from GCC/stdlibc++ and clang+libc++ at the 
+same time, it is just the way that cmake selects a single compiler. 
+
+To run with clang+libc++ use the following recipe:
+```bash
+mkdir build && cd build
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_EXE_LINKER_FLAGS="-lc++abi -lc++"  \
+    -DCMAKE_CXX_COMPILER=/usr/local/bin/clang++ \
+    -DCMAKE_C_COMPILER=/usr/local/bin/clang \
+    -DCMAKE_CXX_FLAGS_INIT="-std=c++20 -stdlib=libc++ -march=native -mtune=native" \
+    -G Ninja ..
+```
+
+## Current Build Status
+
+**Latest Update (2025-09-28)**: Successfully rebuilt from scratch with modern Clang 19.1.6 toolchain
+- ✅ All 11 regex engines working: CTRE, Boost, C++ std, PCRE (3 variants), RE2, Oniguruma, TRE, Rust regex (2 variants)
+- ✅ Latest RE2 with Abseil dependencies properly linked
+- ✅ Performance tests running successfully
+- ⚠️ CTRE has known issues with case-insensitive patterns and word boundaries
+- 🚀 Best performers: Rust regex, PCRE-JIT, RE2
+
 ## Results
 
-These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS. 
+These results were obtained in an AMD Threadripper 3960X (Zen2) at 3.8 GHz running Ubuntu 20.04.5 LTS.
 
-![Updated Performance Results](results_20221012.png "Performance Results")
+![Updated Performance Results](results_threadripper.png "Performance Results")
+
+IceLake Xeon Platinum 8375C @ 2.90GHz (AWS C6i instance) - no mitigations
+
+![IceLake Server](results_icelake.png "Results Ice Lake")

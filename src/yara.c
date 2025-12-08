@@ -92,8 +92,13 @@ int yara_find_all(char* pattern, char* subject, int subject_len, int repeat, str
 
     double * times = calloc(repeat, sizeof(double));
     int const times_len = repeat;
+    TIME_TYPE test_start;
+    GET_TIME(test_start);
     do
     {
+        // Check for timeout before each iteration
+        CHECK_TIMEOUT(test_start);
+
         counter = 0;
         GET_TIME(start);
         yr_rules_scan_mem(rules, (const uint8_t*) subject, subject_len, 0, capture_matches, &counter, 0);

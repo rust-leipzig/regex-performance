@@ -22,8 +22,12 @@ int tre_find_all(char* pattern, char* subject, int subject_len, int repeat, stru
 
     double * times = calloc(repeat, sizeof(double));
     int const times_len = repeat;
+    TIME_TYPE test_start;
+    GET_TIME(test_start);
 
 	do {
+		// Check for timeout before each iteration
+		CHECK_TIMEOUT(test_start);
 		found = 0;
 		ptr = subject;
 		len = subject_len;

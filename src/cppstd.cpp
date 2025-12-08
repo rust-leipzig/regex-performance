@@ -24,8 +24,12 @@ extern "C" int cppstd_find_all(char* pattern, char* subject, int subject_len, in
 
         double * times = (double*) std::calloc(repeat, sizeof(double));
         int const times_len = repeat;
+        TIME_TYPE test_start;
+        GET_TIME(test_start);
 
         do {
+            // Check for timeout before each iteration
+            CHECK_TIMEOUT(test_start);
             GET_TIME(start);
             found = search_all( rx, text );
             GET_TIME(end);
